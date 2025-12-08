@@ -16,7 +16,7 @@ namespace Infra
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var connectionString = _configuration.GetSection("DataBase:ConnectionString").Value;
+            var connectionString = _configuration.GetConnectionString("MySql");
             optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
         }
     }

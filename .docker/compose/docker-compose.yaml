@@ -1,0 +1,12 @@
+# Use root/example as user/password credentials
+
+services:
+  db:
+    container_name: api-diflen-hub-mysql
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345
+    ports:
+      - 3306:3306
+    volumes:
+      - ./mysql-init:/docker-entrypoint-initdb.d
