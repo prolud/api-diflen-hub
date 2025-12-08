@@ -1,0 +1,60 @@
+name: pre merge workflow
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: clone repository
+        uses: actions/checkout@v3
+
+      - name: setup .net
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 10.0.X
+
+      - name: build
+        run: dotnet build
+        
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: clone repository
+        uses: actions/checkout@v3
+
+      - name: setup .net
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 10.0.X
+
+        # gerar testes com relatório de cobertura
+      - name: test
+        run: dotnet test --collect:"XPlat Code Coverage"
+
+        # instala ferramenta para analisar a cobertura de testes
+      - name: install reportgenerator
+        run: dotnet tool install --global dotnet-reportgenerator-globaltool
+
+        # utiliza o reportgenerator para criar a porcentagem de cobertura
+      - name: generate coverage text report
+        run: |
+          reportgenerator \
+            -reports:**/coverage.cobertura.xml \
+            -targetdir:coverage-report \
+            -reporttypes:TextSummary
+
+        # obtem a porcentagem de cobertura e falha caso der erro
+      - name: check coverage threshold
+        run: |
+          COVERAGE=$(grep -oP 'Line coverage: \K[0-9]+' coverage-report/Summary.txt)
+          echo "Coverage detected: $COVERAGE%"
+          MIN=100
+          
+          if [ "$COVERAGE" -lt "$MIN" ]; then
+            echo "Coverage below minimum required ($MIN%). Failing..."
+            exit 1
+          fi
