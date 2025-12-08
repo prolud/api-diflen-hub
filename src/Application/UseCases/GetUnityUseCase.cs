@@ -1,6 +1,6 @@
 using System.Net;
 using Application.UseCases.Common;
-using Domain.DTOs;
+using Domain.Dtos;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 

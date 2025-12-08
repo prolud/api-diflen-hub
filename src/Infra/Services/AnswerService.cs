@@ -1,4 +1,4 @@
-using Domain.DTOs;
+using Domain.Dtos;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Domain.Models;

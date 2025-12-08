@@ -1,4 +1,4 @@
-namespace Domain.DTOs
+namespace Domain.Dtos
 {
     public class AlternativeDtoOut
     {

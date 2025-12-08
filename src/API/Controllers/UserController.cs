@@ -1,6 +1,7 @@
-﻿using System.Net;
+﻿using API.Dtos;
 using Application.UseCases;
-using Domain.DTOs;
+using Domain.Dtos;
+using Domain.Dtos.Login;
 using Domain.Interfaces.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
