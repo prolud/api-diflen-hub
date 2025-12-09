@@ -2,7 +2,7 @@ use apidiflenhub;
 
 create table users(
     id int primary key auto_increment,
-    public_id varchar(36) not null,
+    public_id varchar(36) not null unique,
     email varchar(50) not null,
     username varchar(30) not null,
     password varchar(255) not null,
@@ -14,14 +14,14 @@ create table users(
 
 create table unities(
     id int primary key auto_increment,
-    public_id varchar(36) not null,
+    public_id varchar(36) not null unique,
     name varchar(255) not null,
     description text
 );
 
 create table certificates(
     id int primary key auto_increment,
-    public_id varchar(36) not null,
+    public_id varchar(36) not null unique,
     unity_id int not null,
     user_id int not null,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP not null,
@@ -31,7 +31,7 @@ create table certificates(
 
 create table lessons(
     id int primary key auto_increment,
-    public_id varchar(36) not null,
+    public_id varchar(36) not null unique,
     title varchar(100) not null,
     description text,
     sequence int not null,
@@ -42,7 +42,7 @@ create table lessons(
 
 create table questions(
     id int primary key auto_increment,
-    public_id varchar(36) not null,
+    public_id varchar(36) not null unique,
     statement text not null,
     lesson_id int not null,
     unity_id int not null,
@@ -52,7 +52,7 @@ create table questions(
 
 create table alternatives(
     id int primary key auto_increment,
-    public_id varchar(36) not null,
+    public_id varchar(36) not null unique,
     text text not null,
     is_correct boolean not null,
     question_id int not null,
@@ -61,7 +61,7 @@ create table alternatives(
 
 create table answers(
     id int primary key auto_increment,
-    public_id varchar(36) not null,
+    public_id varchar(36) not null unique,
     alternative_id int not null,
     user_id int not null,
     question_id int not null,
