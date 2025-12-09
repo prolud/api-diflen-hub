@@ -6,6 +6,10 @@ namespace Domain.Models
     public class Question
     {
         public int Id { get; set; }
+        
+        [Column("public_id")]
+        public Guid PublicId { get; set; } = Guid.NewGuid();
+        
         public string Statement { get; set; } = string.Empty;
 
         [Column("lesson_id")]

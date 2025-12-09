@@ -14,9 +14,23 @@ namespace Domain.Models
         public bool Status { get; set; }
 
         [Column("file_type")]
-        public string? FileType { get; set; }
+        public string? FileType
+        {
+            get
+            {
+                return field ?? "";
+            }
+            set;
+        }
 
         [Column("profile_picture")]
-        public byte[]? ProfilePicture { get; set; }
+        public byte[]? ProfilePicture
+        {
+            get
+            {
+                return field ?? [];
+            }
+            set;
+        }
     }
 }
