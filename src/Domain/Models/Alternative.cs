@@ -6,6 +6,10 @@ namespace Domain.Models
     public class Alternative
     {
         public int Id { get; set; }
+        
+        [Column("public_id")]
+        public Guid PublicId { get; set; } = Guid.NewGuid();
+        
         public string Text { get; set; } = string.Empty;
 
         [Column("is_correct")]

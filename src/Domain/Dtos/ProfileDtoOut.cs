@@ -1,32 +1,9 @@
-using System.Diagnostics.Contracts;
-
-namespace Domain.DTOs
+namespace Domain.Dtos
 {
-    public class LoginDtoIn
-    {
-        public string Email { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
-    }
-
-    public class LoginDtoOut
-    {
-        public bool IsLogged { get; set; }
-        public string AccessToken { get; set; } = string.Empty;
-        public DateTime? ExpiresIn { get; set; }
-        public string Message { get; set; } = string.Empty;
-    }
-
-    public class RegisterDtoIn
-    {
-        public string Email { get; set; } = string.Empty;
-        public string Username { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
-    }
-
     public class ProfileDtoOut
     {
         private readonly int LevelMultiplier = 75;
-        
+
         public int Id { get; set; }
         public string Username { get; set; } = string.Empty;
         public long Experience { get; set; }
@@ -77,5 +54,4 @@ namespace Domain.DTOs
             return (100 / (float)requiredNextLevelValue) * experience;
         }
     }
-
 }

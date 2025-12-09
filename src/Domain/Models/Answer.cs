@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Models
@@ -7,6 +6,9 @@ namespace Domain.Models
     public class Answer
     {
         public int Id { get; set; }
+
+        [Column("public_id")]
+        public Guid PublicId { get; set; } = Guid.NewGuid();
 
         [Column("alternative_id")]
         public int AlternativeId { get; set; }
@@ -26,7 +28,8 @@ namespace Domain.Models
         [Column("is_correct")]
         public bool IsCorrect { get; set; }
 
-        public DateTime Created { get; set; }
+        [Column("created_at")]
+        public DateTime CreatedAt { get; set; }
 
         public Question Question { get; set; } = null!;
     }

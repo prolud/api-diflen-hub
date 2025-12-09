@@ -9,6 +9,9 @@ namespace Domain.Models
         [Key]
         public int Id { get; set; }
 
+        [Column("public_id")]
+        public Guid PublicId { get; set; } = Guid.NewGuid();
+        
         [Column("unity_id")]
         public int UnityId { get; set; }
 

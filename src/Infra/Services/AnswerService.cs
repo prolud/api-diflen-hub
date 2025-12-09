@@ -1,4 +1,4 @@
-using Domain.DTOs;
+using Domain.Dtos;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Domain.Models;
@@ -14,7 +14,7 @@ namespace Infra.Services
         {
             return await _context.Answers
                 .Where(a => a.UserId == userId && a.LessonId == lessonId)
-                .OrderByDescending(a => a.Created)
+                .OrderByDescending(a => a.CreatedAt)
                 .ToListAsync();
         }
 
@@ -48,7 +48,7 @@ namespace Infra.Services
                     LessonId = answerVerifyIn.LessonId,
                     UnityId = unityId,
                     IsCorrect = answer.AlternativeId == correctAlternative.Id,
-                    Created = DateTime.Now,
+                    CreatedAt = DateTime.Now,
                 });
             }
 

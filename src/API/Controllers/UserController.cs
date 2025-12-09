@@ -1,6 +1,6 @@
-﻿using System.Net;
-using Application.UseCases;
-using Domain.DTOs;
+﻿using Application.UseCases;
+using Domain.Dtos;
+using Domain.Dtos.Login;
 using Domain.Interfaces.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
