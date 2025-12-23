@@ -3,15 +3,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Domain.Models
 {
     [Table("lessons")]
-    public class Lesson
+    public class Lesson : BaseEntity
     {
-        public int Id { get; set; }
-        
-        [Column("public_id")]
-        public Guid PublicId { get; set; } = Guid.NewGuid();
-        
         public string Title { get; set; } = string.Empty;
+        
         public string? Description { get; set; }
+        
         public int Sequence { get; set; }
 
         [Column("video_url")]
@@ -20,6 +17,6 @@ namespace Domain.Models
         [Column("unity_id")]
         public int UnityId { get; set; }
 
-        public ICollection<Question> Questions { get; set; } = [];
+        public required ICollection<Question> Questions { get; set; }
     }
 }

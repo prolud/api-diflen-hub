@@ -1,5 +1,5 @@
 using System.Net;
-using Application.UseCases.Common;
+using Application.Dtos;
 using Domain.Dtos;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
@@ -8,7 +8,7 @@ namespace Application.UseCases
 {
     public class VerifyAnswersUseCase(IUnityRepository unityRepository, ILessonService lessonService, IAnswerService answerService, IQuestionService questionService, ICertificateService certificateService)
     {
-        public async Task<UseCaseResult> ExecuteAsync(AnswerVerifyIn answerVerifyIn, string userId)
+        public async Task<UseCaseResult> ExecuteAsync(AnswerVerifyIn answerVerifyIn, Guid publicUserId)
         {
             var unity = await unityRepository.GetAsync(u => u.Name == answerVerifyIn.UnityName);
             if (unity is null)
@@ -20,8 +20,8 @@ namespace Application.UseCases
                 };
             }
 
-            var lessonId = answerVerifyIn.LessonId;
-            if (await lessonService.LessonAreAlreadyAnswered(userId, lessonId))
+            var publicLessonId = answerVerifyIn.PublicLessonId;
+            if (await lessonService.LessonAreAlreadyAnswered(publicUserId, publicLessonId))
             {
                 return new()
                 {
@@ -30,7 +30,7 @@ namespace Application.UseCases
                 };
             }
 
-            var verifiedAnswers = await answerService.VerifyAnswersAsync(answerVerifyIn, userId, unity.Id);
+            var verifiedAnswers = await answerService.VerifyAnswersAsync(answerVerifyIn, publicUserId, unity.PublicId);
             if (verifiedAnswers is null)
             {
                 return new()
@@ -40,8 +40,8 @@ namespace Application.UseCases
                 };
             }
 
-            verifiedAnswers.WasAllQuestionsCorrectlyAnswered = await questionService.WasAllQuestionsCorrectlyAnswered(unity.Id, userId);
-            verifiedAnswers.WasCertificateAlreadyIssued = await certificateService.WasCertificateAlreadyIssued(userId, unity.Id);
+            verifiedAnswers.WasAllQuestionsCorrectlyAnswered = await questionService.WasAllQuestionsCorrectlyAnswered(unity.PublicId, publicUserId);
+            verifiedAnswers.WasCertificateAlreadyIssued = await certificateService.WasCertificateAlreadyIssued(unity.PublicId, publicUserId);
 
             return new()
             {

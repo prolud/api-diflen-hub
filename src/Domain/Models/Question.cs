@@ -3,13 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Domain.Models
 {
     [Table("questions")]
-    public class Question
+    public class Question : BaseEntity
     {
-        public int Id { get; set; }
-        
-        [Column("public_id")]
-        public Guid PublicId { get; set; } = Guid.NewGuid();
-        
         public string Statement { get; set; } = string.Empty;
 
         [Column("lesson_id")]
@@ -18,6 +13,7 @@ namespace Domain.Models
         [Column("unity_id")]
         public int UnityId { get; set; }
 
-        public ICollection<Alternative> Alternatives { get; set; } = [];
+        public required ICollection<Alternative> Alternatives { get; set; }
+        public required Unity Unity { get; set; }
     }
 }

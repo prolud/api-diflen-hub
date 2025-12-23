@@ -1,17 +1,10 @@
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Models
 {
     [Table("certificates")]
-    public class Certificate
+    public class Certificate : BaseEntity
     {
-        [Key]
-        public int Id { get; set; }
-
-        [Column("public_id")]
-        public Guid PublicId { get; set; } = Guid.NewGuid();
-        
         [Column("unity_id")]
         public int UnityId { get; set; }
 
@@ -21,8 +14,8 @@ namespace Domain.Models
         [Column("created_at")]
         public DateTime CreatedAt { get; set; }
 
-        public Unity Unity { get; set; } = null!;
+        public Unity? Unity { get; set; }
 
-        public User User { get; set; } = null!;
+        public User? User { get; set; }
     }
 }

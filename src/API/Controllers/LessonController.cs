@@ -18,17 +18,17 @@ namespace API.Controllers
         [HttpGet("get-lessons-by-unity-name")]
         public async Task<IActionResult> GetLessonsFromUnity([FromQuery] string unityName)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
-            var result = await getLessonsUseCase.ExecuteAsync(unityName, userId);
+            var publicUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
+            var result = await getLessonsUseCase.ExecuteAsync(unityName, Guid.Parse(publicUserId));
 
             return StatusCode((int)result.StatusCode, result.Content);
         }
 
         [HttpGet("get-lesson")]
-        public async Task<IActionResult> GetLesson([FromQuery] string unityName, [FromQuery] int lessonId)
+        public async Task<IActionResult> GetLesson([FromQuery] string unityName, [FromQuery] Guid publicLessonId)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
-            var result = await getLessonUseCase.ExecuteAsync(unityName, lessonId, userId);
+            var publicUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
+            var result = await getLessonUseCase.ExecuteAsync(unityName, publicLessonId, Guid.Parse(publicUserId));
 
             return StatusCode((int)result.StatusCode, result.Content);
         }

@@ -4,6 +4,6 @@ namespace Domain.Interfaces.Services
 {
     public interface IAlternativeService
     {
-        public Task<Alternative?> GetCorrectAlternativeAsync(int questionId);
+        public Task<Alternative?> GetCorrectAlternativeAsync(Guid publicQuestionId);
     }
 }

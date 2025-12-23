@@ -44,10 +44,10 @@ namespace API.Controllers
 
             return Ok(new ProfileDtoOut
             {
-                Id = user.Id,
+                PublicId = user.PublicId,
                 Experience = user.Experience,
                 Username = user.Username,
-                ProfilePic = $"data:{user.FileType};base64,{System.Text.Encoding.UTF8.GetString(user.ProfilePicture)}",
+                ProfilePic = $"data:{user.FileType};base64,{System.Text.Encoding.UTF8.GetString(user.ProfilePicture ?? [])}",
             });
         }
     }

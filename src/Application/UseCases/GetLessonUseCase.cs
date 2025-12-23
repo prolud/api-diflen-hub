@@ -1,5 +1,5 @@
 using System.Net;
-using Application.UseCases.Common;
+using Application.Dtos;
 using Domain.Dtos;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
@@ -8,7 +8,7 @@ namespace Application.UseCases
 {
     public class GetLessonUseCase(IUnityRepository unityRepository, ILessonRepository lessonRepository, ILessonService lessonService, IAnswerService answerService)
     {
-        public async Task<UseCaseResult> ExecuteAsync(string unityName, int lessonId, string userId)
+        public async Task<UseCaseResult> ExecuteAsync(string unityName, Guid publicLessonId, Guid publicUserId)
         {
             var unity = await unityRepository.GetAsync(u => u.Name == unityName);
             if (unity is null) return new()
@@ -16,7 +16,7 @@ namespace Application.UseCases
                 StatusCode = HttpStatusCode.NoContent
             };
 
-            var lessonFromDb = await lessonRepository.GetLesson(lessonId);
+            var lessonFromDb = await lessonRepository.GetLesson(publicLessonId);
             if (lessonFromDb is null) return new()
             {
                 StatusCode = HttpStatusCode.NoContent
@@ -25,12 +25,12 @@ namespace Application.UseCases
             var questions = lessonFromDb.Questions
                 .Select(q => new QuestionDtoOut
                 {
-                    Id = q.Id,
+                    PublicId = q.PublicId,
                     Statement = q.Statement,
                     Alternatives = q.Alternatives
                     .Select(a => new AlternativeDtoOut
                     {
-                        Id = a.Id,
+                        PublicId = a.PublicId,
                         QuestionId = a.QuestionId,
                         Text = a.Text
                     })
@@ -42,13 +42,13 @@ namespace Application.UseCases
             {
                 Content = new LessonDtoOut()
                 {
-                    Id = lessonFromDb.Id,
+                    PublicId = lessonFromDb.PublicId,
                     Description = lessonFromDb.Description,
                     Title = lessonFromDb.Title,
                     VideoUrl = lessonFromDb.VideoUrl,
                     Questions = questions,
-                    GetLastAnswersOut = await answerService.GetLastAnswersAsync(userId, lessonId),
-                    Concluded = await lessonService.LessonAreAlreadyAnswered(userId, lessonFromDb.Id),
+                    GetLastAnswersOut = await answerService.GetLastAnswersAsync(publicUserId, publicLessonId),
+                    Concluded = await lessonService.LessonAreAlreadyAnswered(publicUserId, lessonFromDb.PublicId),
                 },
             };
         }

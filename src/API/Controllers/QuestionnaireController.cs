@@ -21,8 +21,8 @@ namespace API.Controllers
         [HttpPost("verify-answers")]
         public async Task<IActionResult> VerifyAnswers([FromBody] AnswerVerifyIn answerVerifyIn)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-            var result = await verifyAnswersUseCase.ExecuteAsync(answerVerifyIn, userId);
+            var publicUserId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            var result = await verifyAnswersUseCase.ExecuteAsync(answerVerifyIn, Guid.Parse(publicUserId));
 
             return StatusCode((int)result.StatusCode, result.Content);
         }

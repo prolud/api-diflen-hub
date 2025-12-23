@@ -1,5 +1,6 @@
 using Domain.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using System.Linq.Expressions;
 
 namespace Infra.Repositories
@@ -8,6 +9,14 @@ namespace Infra.Repositories
     {
         protected readonly DbContext _context = context;
         protected readonly DbSet<T> _dbSet = context.Set<T>();
+
+        public async Task<T> GetAsyncNotNull(Expression<Func<T, bool>> filter)
+        {
+            var entity = await _dbSet.FirstOrDefaultAsync(filter)
+            ?? throw new InvalidOperationException($"Entity not found: {nameof(T)}");
+
+            return entity;
+        }
 
         public async Task<T?> GetAsync(Expression<Func<T, bool>> filter)
         {

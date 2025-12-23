@@ -1,5 +1,5 @@
 using System.Net;
-using Application.UseCases.Common;
+using Application.Dtos;
 using Domain.Dtos;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
@@ -8,7 +8,7 @@ namespace Application.UseCases
 {
     public class GetUnityUseCase(IUnityRepository unityRepository, ICertificateRepository certificateRepository, IQuestionService questionService)
     {
-        public async Task<UseCaseResult> ExecuteAsync(string unityName, string userId)
+        public async Task<UseCaseResult> ExecuteAsync(string unityName, Guid publicUserId)
         {
             var unity = await unityRepository.GetAsync(u => u.Name == unityName);
             if (unity is null) return new()
@@ -16,17 +16,17 @@ namespace Application.UseCases
                 StatusCode = HttpStatusCode.NoContent
             };
 
-            var certificate = await certificateRepository.GetAsync(c => c.UserId == int.Parse(userId) && c.UnityId == unity.Id);
+            var certificate = await certificateRepository.GetAsync(c => c.User.PublicId == publicUserId && c.Unity.PublicId == unity.PublicId);
 
             return new()
             {
                 Content = new UnityDtoOut
                 {
-                    Id = unity.Id,
+                    PublicId = unity.PublicId,
                     Description = unity.Description,
                     Name = unity.Name,
                     WasCertificateAlreadyIssued = certificate is not null,
-                    WasAllQuestionsCorrectlyAnswered = await questionService.WasAllQuestionsCorrectlyAnswered(unity.Id, userId)
+                    WasAllQuestionsCorrectlyAnswered = await questionService.WasAllQuestionsCorrectlyAnswered(unity.PublicId, publicUserId)
                 }
             };
         }

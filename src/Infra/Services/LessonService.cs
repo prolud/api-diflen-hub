@@ -1,15 +1,12 @@
-using System.ComponentModel;
 using Domain.Interfaces.Services;
-using Domain.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace Infra.Services
 {
     public class LessonService(IAnswerService answerService) : ILessonService
     {
-        public async Task<bool> LessonAreAlreadyAnswered(string userId, int lessonId)
+        public async Task<bool> LessonAreAlreadyAnswered(Guid publicUserId, Guid lessonId)
         {
-            var oldLastAnswers = await answerService.GetLastAnswersAsync(userId, lessonId);
+            var oldLastAnswers = await answerService.GetLastAnswersAsync(publicUserId, lessonId);
 
             if (oldLastAnswers.Answers.Count == 0)
             {

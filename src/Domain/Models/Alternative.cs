@@ -3,13 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Domain.Models
 {
     [Table("alternatives")]
-    public class Alternative
+    public class Alternative : BaseEntity
     {
-        public int Id { get; set; }
-        
-        [Column("public_id")]
-        public Guid PublicId { get; set; } = Guid.NewGuid();
-        
         public string Text { get; set; } = string.Empty;
 
         [Column("is_correct")]
