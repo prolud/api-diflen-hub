@@ -4,7 +4,7 @@ namespace Domain.Dtos
     {
         private readonly int LevelMultiplier = 75;
 
-        public int Id { get; set; }
+        public Guid PublicId { get; set; }
         public string Username { get; set; } = string.Empty;
         public long Experience { get; set; }
         public string ProfilePic { get; set; } = string.Empty;

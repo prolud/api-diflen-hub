@@ -6,21 +6,26 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infra.Services
 {
-    public class AnswerService(AppDbContext _context, IAlternativeService _alternativeService, IAnswerRepository unityRepository, IUserRepository _userRepository) : IAnswerService
+    public class AnswerService(
+        AppDbContext _context,
+        IAlternativeService _alternativeService,
+        IAnswerRepository _unityRepository,
+        IUserRepository _userRepository,
+        IAlternativeRepository _alternativeRepository) : IAnswerService
     {
         const int DEFAULT_POINTS = 300;
 
-        private async Task<List<Answer>> GetAnswersByUserAndLesson(int userId, int lessonId)
+        private async Task<List<Answer>> GetAnswersByUserAndLesson(Guid publicUserId, Guid publicLessonId)
         {
             return await _context.Answers
-                .Where(a => a.UserId == userId && a.LessonId == lessonId)
+                .Where(a => a.User.PublicId == publicUserId && a.Lesson.PublicId == publicLessonId)
                 .OrderByDescending(a => a.CreatedAt)
                 .ToListAsync();
         }
 
-        public async Task<GetLastAnswersOut> GetLastAnswersAsync(string userId, int lessonId)
+        public async Task<GetLastAnswersOut> GetLastAnswersAsync(Guid publicUserId, Guid publicLessonId)
         {
-            var userAnswers = await GetAnswersByUserAndLesson(int.Parse(userId), lessonId);
+            var userAnswers = await GetAnswersByUserAndLesson(publicUserId, publicLessonId);
 
             var answers = GetAnswerVerifyOuts(userAnswers);
 
@@ -31,34 +36,37 @@ namespace Infra.Services
             };
         }
 
-        public async Task<GetLastAnswersOut?> VerifyAnswersAsync(AnswerVerifyIn answerVerifyIn, string userId, int unityId)
+        public async Task<GetLastAnswersOut?> VerifyAnswersAsync(AnswerVerifyIn answerVerifyIn, Guid publicUserId, Guid publicUnityId)
         {
             var answersToInsert = new List<Answer>();
+            var user = await _userRepository.GetAsyncNotNull(user => user.PublicId == publicUserId);
+            var unity = await _unityRepository.GetAsyncNotNull(unity => unity.PublicId == publicUnityId);
 
             foreach (var answer in answerVerifyIn.Answers)
             {
-                var correctAlternative = await _alternativeService.GetCorrectAlternativeAsync(answer.QuestionId);
+                var correctAlternative = await _alternativeService.GetCorrectAlternativeAsync(answer.PublicQuestionId);
                 if (correctAlternative is null) return null;
+                var alternative = await _alternativeRepository.GetAsyncNotNull(alt => alt.PublicId == answer.PublicAlternativeId);
 
                 answersToInsert.Add(new Answer
                 {
-                    AlternativeId = answer.AlternativeId,
-                    UserId = int.Parse(userId),
-                    QuestionId = answer.QuestionId,
-                    LessonId = answerVerifyIn.LessonId,
-                    UnityId = unityId,
-                    IsCorrect = answer.AlternativeId == correctAlternative.Id,
+                    AlternativeId = alternative.Id,
+                    UserId = user.Id,
+                    QuestionId = alternative.QuestionId,
+                    LessonId = alternative.Question.LessonId,
+                    UnityId = unity.Id,
+                    IsCorrect = answer.PublicAlternativeId == correctAlternative.PublicId,
                     CreatedAt = DateTime.Now,
                 });
             }
 
-            await unityRepository.InsertRangeAsync(answersToInsert);
+            await _unityRepository.InsertRangeAsync(answersToInsert);
 
-            var lastAnswers = await GetLastAnswersAsync(userId, answerVerifyIn.LessonId);
+            var lastAnswers = await GetLastAnswersAsync(publicUserId, answerVerifyIn.PublicLessonId);
 
             if (!lastAnswers.Answers.Any(ai => !ai.IsCorrect))
             {
-                await _userRepository.AddExperience(lastAnswers.CurrentPointsWeight, int.Parse(userId));
+                await _userRepository.AddExperience(lastAnswers.CurrentPointsWeight, publicUserId);
             }
 
             return lastAnswers;
@@ -67,19 +75,19 @@ namespace Infra.Services
         private static List<AnswerVerifyOut> GetAnswerVerifyOuts(List<Answer> userAnswers)
         {
             var lessonQuestionsIds = userAnswers
-            .GroupBy(a => a.QuestionId)
+            .GroupBy(a => a.Question.PublicId)
             .Select(g => g.Key)
             .ToList();
 
             var lastAnswers = lessonQuestionsIds
-            .Select(lqi => userAnswers.First(a => a.QuestionId == lqi))
+            .Select(lqi => userAnswers.First(a => a.Question.PublicId == lqi))
             .ToList();
 
             var answers = lastAnswers
             .Select(la => new AnswerVerifyOut
             {
-                AlternativeId = la.AlternativeId,
-                QuestionId = la.QuestionId,
+                PublicAlternativeId = la.Alternative.PublicId,
+                PublicQuestionId = la.Question.PublicId,
                 IsCorrect = la.IsCorrect,
             })
             .ToList();

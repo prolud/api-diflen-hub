@@ -4,7 +4,7 @@ namespace Domain.Interfaces.Services
 {
     public interface IAnswerService
     {
-        Task<GetLastAnswersOut> GetLastAnswersAsync(string userId, int lessonId);
-        Task<GetLastAnswersOut?> VerifyAnswersAsync(AnswerVerifyIn answerVerifyIn, string userId, int unityId);
+        Task<GetLastAnswersOut> GetLastAnswersAsync(Guid publicUserId, Guid publicLessonId);
+        Task<GetLastAnswersOut?> VerifyAnswersAsync(AnswerVerifyIn answerVerifyIn, Guid publicUserId, Guid publicUnityId);
     }
 }

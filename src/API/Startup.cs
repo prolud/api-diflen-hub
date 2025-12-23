@@ -50,6 +50,7 @@ namespace API
             services.AddScoped<IQuestionRepository, QuestionRepository>();
             services.AddScoped<IUnityRepository, UnityRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IAlternativeRepository, AlternativeRepository>();
 
             // services
             services.AddScoped<ILessonService, LessonService>();

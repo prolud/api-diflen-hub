@@ -6,14 +6,12 @@ namespace Infra.Services
 {
     public class AlternativeService(AppDbContext _context) : IAlternativeService
     {
-        public async Task<Alternative?> GetCorrectAlternativeAsync(int questionId)
+        public async Task<Alternative?> GetCorrectAlternativeAsync(Guid publicQuestionId)
         {
-            var correctAlternative = await _context.Alternatives
-            .Where(a => a.QuestionId == questionId && a.IsCorrect)
+            return await _context.Alternatives
+            .Where(a => a.Question.PublicId == publicQuestionId && a.IsCorrect)
             .Include(a => a.Question)
             .FirstOrDefaultAsync();
-
-            return correctAlternative;
         }
     }
 }

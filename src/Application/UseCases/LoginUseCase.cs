@@ -1,5 +1,5 @@
 using System.Net;
-using Application.UseCases.Common;
+using Application.Dtos;
 using Domain.Dtos;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;

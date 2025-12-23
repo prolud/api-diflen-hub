@@ -2,7 +2,7 @@ namespace Domain.Dtos
 {
     public class AlternativeDtoIn
     {
-        public int QuestionId { get; set; }
-        public int AlternativeId { get; set; }
+        public Guid PublicQuestionId { get; set; }
+        public Guid PublicAlternativeId { get; set; }
     }
 }

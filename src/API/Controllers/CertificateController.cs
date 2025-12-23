@@ -17,8 +17,8 @@ namespace API.Controllers
         [HttpPost("issue")]
         public async Task<IActionResult> IssueNewCertificate([FromQuery] string unityName)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
-            var result = await issueCertificateUseCase.ExecuteAsync(userId, unityName);
+            var publicUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
+            var result = await issueCertificateUseCase.ExecuteAsync(Guid.Parse(publicUserId), unityName);
 
             return StatusCode((int)result.StatusCode, result.Content);
         }
@@ -37,7 +37,7 @@ namespace API.Controllers
 
             return Ok(certificates.Select(c => new
             {
-                UnityName = c.Unity.Name,
+                UnityName = c.Unity!.Name,
                 c.CreatedAt
             })
             .ToList());

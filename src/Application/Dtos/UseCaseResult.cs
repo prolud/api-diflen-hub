@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace Application.UseCases.Common
+namespace Application.Dtos
 {
     public class UseCaseResult
     {

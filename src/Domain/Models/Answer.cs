@@ -3,13 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Domain.Models
 {
     [Table("answers")]
-    public class Answer
+    public class Answer : BaseEntity
     {
-        public int Id { get; set; }
-
-        [Column("public_id")]
-        public Guid PublicId { get; set; } = Guid.NewGuid();
-
         [Column("alternative_id")]
         public int AlternativeId { get; set; }
 
@@ -32,5 +27,9 @@ namespace Domain.Models
         public DateTime CreatedAt { get; set; }
 
         public Question Question { get; set; } = null!;
+        public Unity Unity { get; set; } = null!;
+        public User User { get; set; } = null!;
+        public Alternative Alternative { get; set; } = null!;
+        public Lesson Lesson { get; set; } = null!;
     }
 }

@@ -6,12 +6,12 @@ namespace Infra.Repositories
 {
     public class LessonRepository(AppDbContext context) : BaseRepository<Lesson>(context), ILessonRepository
     {
-        public async Task<Lesson?> GetLesson(int lessonId)
+        public async Task<Lesson?> GetLesson(Guid publicId)
         {
             return await context.Lessons
-            .Include(l => l.Questions)
-            .ThenInclude(q => q.Alternatives)
-            .FirstOrDefaultAsync(l => l.Id == lessonId);
+                .Include(l => l.Questions)
+                .ThenInclude(q => q.Alternatives)
+                .FirstOrDefaultAsync(l => l.PublicId == publicId);
         }
     }
 }

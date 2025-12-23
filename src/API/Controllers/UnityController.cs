@@ -15,10 +15,10 @@ public class UnityController(IUnityRepository unityRepository, GetUnityUseCase g
     [HttpGet("get-all")]
     public async Task<IActionResult> GetAllUnities()
     {
-        var unities = await unityRepository.GetListAsync(u => u.Id > 0);
+        var unities = await unityRepository.GetListAsync(u => true);
         return Ok(unities.Select(unity => new UnityDtoOut
         {
-            Id = unity.Id,
+            PublicId = unity.PublicId,
             Name = unity.Name,
             Description = unity.Description,
         }));
@@ -27,8 +27,8 @@ public class UnityController(IUnityRepository unityRepository, GetUnityUseCase g
     [HttpGet("get-from-name")]
     public async Task<IActionResult> GetUnity([FromQuery] string unityName)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
-        var result = await getUnityUseCase.ExecuteAsync(unityName, userId);
+        var publicUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
+        var result = await getUnityUseCase.ExecuteAsync(unityName, Guid.Parse(publicUserId));
         return StatusCode((int)result.StatusCode, result.Content);
     }
 }
