@@ -16,7 +16,7 @@ namespace Application.UseCases
                 StatusCode = HttpStatusCode.NoContent
             };
 
-            var certificate = await certificateRepository.GetAsync(c => c.User.PublicId == publicUserId && c.Unity.PublicId == unity.PublicId);
+            var certificate = await certificateRepository.GetAsync(c => c.User!.PublicId == publicUserId && c.Unity!.PublicId == unity.PublicId);
 
             return new()
             {
